@@ -7,7 +7,8 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import Sound from 'react-native-sound';
+
+var Sound = require('react-native-sound');
 
 const App = () => {
   const soundList = [
@@ -23,12 +24,28 @@ const App = () => {
     require('./assets/ten.wav'),
   ];
 
+  const handleSound = (sound) => {
+    const soundVar = new Sound(sound, Sound.MAIN_BUNDLE, (err) => {
+      if (err) {
+        console.log('Unable to play the sound');
+        return;
+      }
+    });
+    setTimeout(() => {
+      soundVar.play();
+    }, 1000);
+    soundVar.release();
+  };
+
   return (
     <ScrollView style={styles.container}>
       <Image style={styles.logo} source={require('./assets/logo.png')} />
       <View style={styles.gridContainer}>
         {soundList.map((sound) => (
-          <TouchableOpacity style={styles.box} key={sound}>
+          <TouchableOpacity
+            style={styles.box}
+            key={sound}
+            onPress={() => handleSound(sound)}>
             <Text style={styles.text}>{sound}</Text>
           </TouchableOpacity>
         ))}
